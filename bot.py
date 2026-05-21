@@ -24,7 +24,7 @@ def get_db():
             user=os.getenv("DB_USER", "root"),
             password=os.getenv("DB_PASSWORD", ""),
             database=os.getenv("DB_NAME", "game9m"),
-            timeout=10
+            connection_timeout=10
         )
     except Exception as e:
         print(f"❌ Database Connection Error: {e}")
