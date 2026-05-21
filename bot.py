@@ -134,9 +134,49 @@ def start(message):
         kb.add(InlineKeyboardButton("🚀 VIP প্রেডিকশন গ্রুপে প্রবেশ করুন", url=SIGNAL_LINK))
 
     kb.add(InlineKeyboardButton("🎰 রেজিস্ট্রেশন করুন", url=SIGNUP_URL))
+    kb.add(InlineKeyboardButton("💎 VIP অ্যাক্সেস পান", callback_data="check_vip"))
     kb.add(InlineKeyboardButton("📊 সিগন্যাল দেখুন", url=SIGNAL_LINK))
     kb.add(InlineKeyboardButton("🎁 রেফারেল স্ট্যাটাস", callback_data="my_referral"))
     bot.reply_to(message, text, reply_markup=kb)
+
+# ── VIP ACCESS CHECK ──────────────────────────────────────
+@bot.callback_query_handler(func=lambda c: c.data == "check_vip")
+def check_vip(call):
+    uid = str(call.from_user.id)
+    try:
+        conn = get_db()
+        cur = conn.cursor(dictionary=True)
+        cur.execute("SELECT referral_count FROM telegram_users WHERE telegram_id=%s", (uid,))
+        row = cur.fetchone()
+        rc = row["referral_count"] if row else 0
+        
+        bname = bot.get_me().username
+        link = f"https://t.me/{bname}?start=ref_{uid}"
+
+        if rc >= 10:
+            msg = (
+                f"🎉 *অভিনন্দন! আপনার ১০টি রেফার পূর্ণ হয়েছে!* 🎉\n\n"
+                f"আপনি এখন আমাদের প্রিমিয়াম VIP সিগন্যাল গ্রুপের জন্য যোগ্য।\n"
+                f"নিচের লিঙ্কে ক্লিক করে এখনই জয়েন করুন:\n\n"
+                f"👉 {SIGNAL_LINK}\n\n"
+                f"সাথেই থাকুন, Game9M এর সাথেই জিতুন! 🚀"
+            )
+            bot.send_message(call.message.chat.id, msg)
+        else:
+            msg = (
+                f"❌ *দুঃখিত! আপনার এখনও ১০ জন রেফার পূর্ণ হয়নি।* ❌\n\n"
+                f"📊 আপনার বর্তমান রেফার: `{rc}` জন।\n"
+                f"🎯 টার্গেট: `10` জন।\n"
+                f"বাকি আছে: `{10-rc}` জন।\n\n"
+                f"VIP চ্যানেলের অ্যাক্সেস পেতে নিচের ইনভাইটেশন লিঙ্কটি বন্ধুদের সাথে শেয়ার করুন:\n"
+                f"🔗 `{link}`"
+            )
+            bot.send_message(call.message.chat.id, msg)
+        
+        cur.close(); conn.close()
+    except Exception as e:
+        print(e)
+        bot.send_message(call.message.chat.id, "তথ্য চেক করতে সমস্যা হচ্ছে। কিছুক্ষণ পর আবার চেষ্টা করুন।")
 
 # ── REFERRAL STATUS ───────────────────────────────────────
 @bot.callback_query_handler(func=lambda c: c.data == "my_referral")
