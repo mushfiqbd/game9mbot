@@ -267,6 +267,16 @@ if __name__ == "__main__":
         exit(1)
     print("🤖 Python Bot is starting up in Polling format...")
     
+    # Check Database Connection on Startup
+    try:
+        conn = get_db()
+        conn.ping(reconnect=True)
+        print("✅ Database connection successful!")
+        conn.close()
+    except Exception as e:
+        print(f"❌ DATABASE CONNECTION FAILED: {e}")
+        print("বট চলছে কিন্তু ডাটাবেসের সাথে কোনো যোগাযোগ নেই।")
+    
     # Remove webhook to avoid Telegram 409 Conflict error
     bot.remove_webhook()
     time.sleep(1)
