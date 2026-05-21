@@ -18,12 +18,17 @@ SIGNAL_LINK = "https://t.me/+uZnBIr3EaN9lNmU1"
 CHANNEL_URL = f"https://t.me/{CHANNEL_ID.replace('@', '')}"
 
 def get_db():
-    return mysql.connector.connect(
-        host=os.getenv("DB_HOST", "127.0.0.1"),
-        user=os.getenv("DB_USER", "root"),
-        password=os.getenv("DB_PASSWORD", ""),
-        database=os.getenv("DB_NAME", "game9m"),
-    )
+    try:
+        return mysql.connector.connect(
+            host=os.getenv("DB_HOST", "127.0.0.1"),
+            user=os.getenv("DB_USER", "root"),
+            password=os.getenv("DB_PASSWORD", ""),
+            database=os.getenv("DB_NAME", "game9m"),
+            timeout=10
+        )
+    except Exception as e:
+        print(f"❌ Database Connection Error: {e}")
+        raise e
 
 bot = telebot.TeleBot(BOT_TOKEN, parse_mode="Markdown")
 
@@ -111,7 +116,7 @@ def start(message):
         f"বাংলাদেশের সবচেয়ে ট্রাস্টেড এবং সিকিউর গেমিং প্ল্যাটফর্মে আপনি এখন যুক্ত আছেন। "
         f"আমাদের প্রতিদিনের নিখুঁত প্রেডিকশন এবং সিগন্যালগুলো মেনে খেলে আপনি নিশ্চিত প্রোফিট করতে পারবেন!\n\n"
         f"⚡ *কেন Game9M সেরা?*\n"
-        f"✅ *১০০% সিকিউর ডিপোজিট এবং Instant ম সুপারফাস্ট উইথড্র*\n"
+        f"✅ *১০০% সিকিউর ডিপোজিট এবং ৫ মিনিটে সুপারফাস্ট উইথড্র*\n"
         f"✅ *Wingo ও Aviator গেমের ৯৮% অ্যাকুরেট লাইভ সিগন্যাল*\n"
         f"✅ *নতুন একাউন্ট খুললেই পাচ্ছেন ৩০০% পর্যন্ত আকর্ষণীয় ওয়েলকাম বোনাস!*\n\n"
         f"🚀 *দেরি না করে আজই আপনার একাউন্ট খুলে খেলা শুরু করুন!*\n"
