@@ -13,7 +13,7 @@ load_dotenv()
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID", "@game9m")
 LANDING_PAGE_URL = os.getenv("LANDING_PAGE_URL", "https://game9m.live")
-SIGNUP_URL = os.getenv("SIGNUP_URL", "http://game9m.com/h5/#/register?promoCode=79704340")
+SIGNUP_URL = os.getenv("SIGNUP_URL", "https://game9m.live/h5/#/register?invitationCode=34711200196")
 SIGNAL_LINK = "https://t.me/+uZnBIr3EaN9lNmU1"
 CHANNEL_URL = f"https://t.me/{CHANNEL_ID.replace('@', '')}"
 
@@ -117,7 +117,7 @@ def start(message):
         f"আমাদের এখানে পাচ্ছেন বিকাশ, নগদ এবং রকেটের মাধ্যমে অটোমেটিক ও ইনস্ট্যান্ট উইথড্র সুবিধা। জিতুন এবং সাথে সাথেই টাকা নিজের পকেটে নিন!\n\n"
         f"🚀 দেরি না করে আজই আপনার একাউন্ট খুলে খেলা শুরু করুন!\n"
         f"🎯 *বিশেষ অফার:* আপনার বন্ধুদের রেফার করে মোট ১০ জনকে যুক্ত করলেই পাচ্ছেন আমাদের প্রিমিয়াম VIP চ্যানেলের আজীবন ফ্রি অ্যাক্সেস!\n\n"
-        f"🌐 [App Link](http://game9m.com/h5/#/register?promoCode=79704340)"
+        f"🌐 [App Link](https://game9m.live)"
     )
     # Sending Image + Buttons for Start
     bot.send_photo(
@@ -220,7 +220,14 @@ def broadcast():
             cur = db.cursor(dictionary=True)
             cur.execute("SELECT `value` FROM settings WHERE `key`='promo_message_format'")
             r = cur.fetchone()
-            promo = r["value"] if r and r["value"] else "🎯今日のスペシャルオファー🎯"
+            promo = r["value"] if r and r["value"] else (
+                "🎯 *আজকের স্পেশাল অফার!* 🎯\n\n"
+                "💰 Game9M-তে আজই ডিপোজিট করুন এবং পান ৩০০% পর্যন্ত বোনাস!\n\n"
+                "✅ Wingo ও Aviator-এ ৯৮% নিখুঁত সিগন্যাল\n"
+                "✅ বিকাশ, নগদ ও রকেটে ইনস্ট্যান্ট উইথড্র\n"
+                "✅ ১০ জন রেফার করলে আজীবন VIP অ্যাক্সেস!\n\n"
+                "🚀 দেরি না করে এখনই শুরু করুন!"
+            )
             kb = InlineKeyboardMarkup().add(InlineKeyboardButton("🎰 খেলা শুরু করুন", url=SIGNUP_URL))
             cur.execute("SELECT telegram_id FROM telegram_users")
             users = cur.fetchall()
